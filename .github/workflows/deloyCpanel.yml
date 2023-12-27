@@ -1,18 +1,22 @@
 name: Publish Website to Channel
+
 on:
-    push:
-	  - main
+  push:
+    branches:
+      - main
+
 jobs:
-	FTP-Deloy-Action:
-		name: FTP-Deloy-Action
-		runs-on: ubuntu-latest
-		steps:
-		-	user: actions/checkout@v2.1.0
-			with:
-				fetch-depth: 2
-		-	name: FTP-Deloy-Action
-			users: $amKirkland/FTP-Deloy-Action@3.1.1
-			with:
-				ftp-server: ${{  secrets.FTP_SERVER }}
-				ftp-username: ${{  secrets.FTP_USERNAME }}
-				ftp-password: ${{  secrets.FTP_PASSWORD }}
+  FTP-Deploy-Action:
+    name: FTP-Deploy-Action
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.1.0
+        with:
+          fetch-depth: 2
+      - name: FTP-Deploy-Action
+        uses: amKirkland/FTP-Deploy-Action@3.1.1
+        with:
+          ftp-server: ${{ secrets.FTP_SERVER }}
+          ftp-username: ${{ secrets.FTP_USERNAME }}
+          ftp-password: ${{ secrets.FTP_PASSWORD }}
