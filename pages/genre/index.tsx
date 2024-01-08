@@ -1,47 +1,43 @@
-import FilterFilm from '@/components/FilterFilm';
-import LayoutHeader from '@/components/LayoutHeader';
-import React, { useState } from 'react';
-import Loading from '../loading';
-import { useRouter } from 'next/router';
-// import PlayButton from '@/components/PlayButton';
-import MovieList from '@/components/MovieList';
-import InfoModal from '@/components/InfoModal';
-import useInfoModalStore from '@/hooks/useInfoModalStore';
+import React, { useMemo } from 'react';
+import MovieAlbum from '@/components/MovieAlbum';
+import useTrans from '@/hooks/useTrans';
+import Line from '@/components/Line';
+import useMovie from '@/hooks/useMovie';
+import { MovieDetailInterface } from '@/types';
+import { EGenreType } from '@/enum';
 
 const GenreScreen = () => {
-  const [sortValue, setSortValue] = useState('newest');
-  const [genreValue, setGenreValue] = useState('action');
-  const [countryValue, setCountryValue] = useState('us');
+  const trans = useTrans();
+  const { data: moviesData = [], isLoading } = useMovie();
 
-  const router = useRouter();
-  // const { isOpen, closeModal } = useInfoModalStore();
+  const filterSeriesData = useMemo(
+    () => moviesData.filter((data: MovieDetailInterface) => data.movie.type === EGenreType.SERIES),
+    [moviesData],
+  );
 
-  const handleSortChange = (value: string) => {
-    setSortValue(value);
-    // Xử lý khi giá trị sắp xếp thay đổi
-  };
+  const filterSingleData = useMemo(
+    () => moviesData.filter((data: MovieDetailInterface) => data.movie.type === EGenreType.SINGLE),
+    [moviesData],
+  );
 
-  const handleGenreChange = (value: string) => {
-    setGenreValue(value);
-    // Xử lý khi giá trị thể loại thay đổi
-  };
-
-  const handleCountryChange = (value: string) => {
-    setCountryValue(value);
-    // Xử lý khi giá trị quốc gia thay đổi
-  };
   return (
-    <div className="pt-[93px]">
-      <LayoutHeader />
-      <div className="pb-40">
-        <FilterFilm
-          onSortChange={handleSortChange}
-          onGenreChange={handleGenreChange}
-          onCountryChange={handleCountryChange}
+    <div className="pt-[93px] pb-16">
+      {/* <LayoutHeader /> */}
+        <MovieAlbum
+          title={trans.home.series_movie}
+          moviesData={filterSeriesData}
+          isLoading={isLoading}
+          itemsPerPage={12}
+          isNavigate
         />
-
-        
-      </div>
+        <Line />
+        <MovieAlbum
+          title={trans.home.single_movie}
+          moviesData={filterSingleData}
+          isLoading={isLoading}
+          itemsPerPage={12}
+          isNavigate
+        />
     </div>
   );
 };

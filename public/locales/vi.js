@@ -5,5 +5,7 @@ export default {
     genre: 'thể loại',
     trending: 'xu hướng',
     series_movie: 'phim bộ',
+    horror_movie: 'phim kinh dị',
+    single_movie: 'phim lẻ',
   },
 };
